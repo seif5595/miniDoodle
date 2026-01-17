@@ -4,7 +4,8 @@ import com.challenge.minidoodle.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ public class UserResponse {
     private String email;
     private String firstName;
     private String lastName;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private Long calendarId;
 
     public static UserResponse fromEntity(User user) {
