@@ -11,8 +11,6 @@ A mini calendar and meeting scheduling service built with **Spring Boot** and **
 - [Project Structure](#project-structure)
 - [Setup & Installation](#setup--installation)
 - [API Documentation](#api-documentation)
-- [Configuration](#configuration)
-- [Current Limitations](#current-limitations)
 - [Future Enhancements](#future-enhancements)
 
 ---
@@ -280,7 +278,7 @@ minidoodle/
 
 1. Clone the repository
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/seif5595/miniDoodle.git
    cd minidoodle
     ```
 2. Start all services
@@ -301,3 +299,91 @@ minidoodle/
    docker compose down -v
     ```
 ---
+## API Documentation
+
+
+### Interactive Documentation
+
+Access Swagger UI at: http://localhost:8080/swagger-ui/index.html
+
+### User Endpoints
+```declarative
++--------+---------------------------+----------------------+
+| Method | Endpoint                  | Description          |
++--------+---------------------------+----------------------+
+| POST   | /api/users                | Create a new user    |
+| GET    | /api/users                | Get all users        |
+| GET    | /api/users/{id}           | Get user by ID       |
+| GET    | /api/users/email/{email}  | Get user by email    |
+| PUT    | /api/users/{id}           | Update user          |
+| DELETE | /api/users/{id}           | Delete user          |
++--------+---------------------------+----------------------+
+```
+
+### Time Slot Endpoints
+
+```declarative
++--------+-------------------------------------------+------------------------------+
+| Method | Endpoint                                  | Description                  |
++--------+-------------------------------------------+------------------------------+
+| POST   | /api/time-slots                           | Create a new time slot       |
+| GET    | /api/time-slots/{id}                      | Get time slot by ID          |
+| GET    | /api/time-slots/user/{userId}             | Get all time slots for user  |
+| GET    | /api/time-slots/user/{userId}/available   | Get available slots          |
+| GET    | /api/time-slots/user/{userId}/busy        | Get busy slots               |
+| GET    | /api/time-slots/user/{userId}/availability| Get availability for range   |
+| PUT    | /api/time-slots/{id}                      | Update time slot             |
+| PATCH  | /api/time-slots/{id}/busy                 | Mark slot as busy            |
+| PATCH  | /api/time-slots/{id}/available            | Mark slot as available       |
+| DELETE | /api/time-slots/{id}                      | Delete time slot             |
++--------+-------------------------------------------+------------------------------+
+```
+### Meeting Endpoints
+```declarative
++--------+-----------------------------------------------+-------------------------+
+| Method | Endpoint                                      | Description             |
++--------+-----------------------------------------------+-------------------------+
+| POST   | /api/meetings                                 | Create a new meeting    |
+| GET    | /api/meetings/{id}                            | Get meeting by ID       |
+| GET    | /api/meetings/organizer/{userId}              | Get by organizer        |
+| GET    | /api/meetings/participant/{userId}            | Get by participant      |
+| GET    | /api/meetings/user/{userId}                   | Get all for user        |
+| GET    | /api/meetings/range                           | Get in time range       |
+| PUT    | /api/meetings/{id}                            | Update meeting          |
+| POST   | /api/meetings/{meetingId}/participants/{userId}| Add participant        |
+| DELETE | /api/meetings/{meetingId}/participants/{userId}| Remove participant     |
+| DELETE | /api/meetings/{id}                            | Cancel meeting          |
++--------+-----------------------------------------------+-------------------------+
+```
+---
+## Future Enhancements
+
+#### 1. Authentication & Authorization
+- Implement Spring Security with JWT tokens
+- Add role-based access control (ADMIN, USER)
+- Secure endpoints based on user ownership
+
+#### 2. Input Validation
+- Add Bean Validation annotations
+- Custom validators for business rules
+
+
+#### 3. Pagination & Sorting
+- Implement paginated responses
+- Add sorting options
+
+#### 4. Participant Availability Check
+- Validate participant availability before adding
+- Warn or reject if participant has conflicts
+
+#### 5. Recurring Meetings
+- Support for recurring patterns
+- Daily, weekly, monthly options
+
+#### 6. Audit Logging
+- Track all entity changes
+- Who made changes and when
+
+### 7. Caching
+- Cache frequently accessed data
+- Redis integration
