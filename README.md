@@ -49,3 +49,6 @@ Before running the application, ensure you have:
 ```bash
 git clone https://github.com/seif5595/miniDoodle.git
 cd miniDoodle
+docker-compose up --build
+```
+
