@@ -1,67 +1,40 @@
-spring:
-  application:
-    name: minidoodle
+version: '3.8'
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/minidoodle
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: minidoodle-db
+    environment:
+      POSTGRES_DB: minidoodle
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - minidoodle-network
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-        jdbc:
-          time_zone: UTC
+  app:
+    build: .
+    container_name: minidoodle-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/minidoodle
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      TZ: UTC
+    networks:
+      - minidoodle-network
 
-server:
-  port: 8080
+volumes:
+  postgres_data:
 
-# JWT Configuration
-jwt:
-  secret: miniDoodleSecretKeyForJWTTokenGenerationMinimum256BitsLong12345678901234567890
-  expiration: 86400000  # 24 hours in milliseconds
-
-
-
-#spring:
-#  application:
-#    name: minidoodle
-#
-#  datasource:
-#    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/minidoodle}
-#    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-#    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
-#    driver-class-name: org.postgresql.Driver
-#
-#  jpa:
-#    hibernate:
-#      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
-#    show-sql: false
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        format_sql: true
-#
-#server:
-#  port: 8080
-#
-## JWT Configuration
-#jwt:
-#  secret: ${JWT_SECRET:bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25NaW5pbXVtMjU2Qml0c0xvbmcxMjM0NTY3ODkwMTIzNDU2Nzg5MA==}
-#  expiration: ${JWT_EXPIRATION:86400000}
-#
-## Actuator for metrics
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health,info,metrics,prometheus
-#  endpoint:
-#    health:
-#      show-details: always
+networks:
+  minidoodle-network:
+    driver: bridge
